@@ -8,9 +8,11 @@ from parsel import Selector
 import pandas as pd
 from bs4 import BeautifulSoup
 from selenium.webdriver.firefox.options import Options
-#import socks
-#import socket
-#import stem.process
+import urllib.request
+import socks
+import socket
+import stem.process
+
 
 
 def link_scraper(browser):
@@ -40,17 +42,20 @@ def link_scraper(browser):
         try:
             condition = True
             while condition:
-                time.sleep(random.randint(1, 3))
+                time.sleep(random.randint(1, 6))
                 soup = BeautifulSoup(browser.page_source, 'lxml')
                 browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
                 for link in soup.select('div[class="search-result__info pt3 pb4 ph0"]'):
+                    #image_name = companyname + ".jpg"
+                    #imgs = browser.find_elements_by_xpath('//img[@class="lazy-image ivm-view-attr__img--centered  EntityPhoto-circle-4 presence-entity__image EntityPhoto-circle-4 loaded"]/@src').get_attribute('src')
+                    #urllib.request.urlretrieve(imgs, image_name, dirname)
                     for a in link.find_all('a', class_='search-result__result-link ember-view'):
                         hrefs_tags = (a.get('href'))
                         carrot_list = root_url + str(hrefs_tags)
                         list.append(carrot_list)
-                nextt_button = browser.find_element_by_xpath('//button[@class="next"]')
+                nextt_button = browser.find_element_by_xpath('//button[@class="artdeco-pagination__button artdeco-pagination__button--next artdeco-button artdeco-button--muted artdeco-button--icon-right artdeco-button--1 artdeco-button--tertiary ember-view"]')
                 if nextt_button:
-                    time.sleep(random.randint(2, 4))
+                    time.sleep(random.randint(1, 5))
                     nextt_button.click()
                 else:
                     condition = False
@@ -63,17 +68,12 @@ def link_scraper(browser):
 
 
 def main():
-    # Activating the Stem project, which is using the Tor Protocol.
 
-    # SOCKS_PORT = 7000  # You can change the port number
-    # tor_process = stem.process.launch_tor_with_config(config={'SocksPort': str(SOCKS_PORT), },)
-    # socks.setdefaultproxy(proxy_type=socks.PROXY_TYPE_SOCKS5, addr="127.0.0.1", port=SOCKS_PORT)
-    # socket.socket = socks.socksocket
 
     # Get Firefox browser.
-    options = Options()
-    options.headless = True
-    browser = webdriver.Firefox(options=options)
+    #options = Options()
+    #options.headless = True
+    browser = webdriver.Firefox()#(options=options)
     print('Activating: Headless Mode!')
     browser.get("https://linkedin.com/uas/login")
     email_element = browser.find_element_by_id("username")
@@ -94,7 +94,7 @@ def main():
     # replace with 'clear' for Unix type system.
     os.system('cls')
     browser.close()
-    #tor_process.kill()
+    #binary.kill()
 
 
 if __name__ == "__main__":
